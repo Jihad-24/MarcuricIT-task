@@ -52,3 +52,15 @@
     transform: translate(-50%, -50%);
   }
   
+  .action{
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 20px;
+    align-items: center;
+  }
+
+  .action span .feather-icon {
+    width: 15px !important;
+    height: 15px !important;
+}

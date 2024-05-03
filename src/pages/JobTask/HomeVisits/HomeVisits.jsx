@@ -6,6 +6,7 @@ import DeleteModal from "../DeleteModal";
 import { records as EventData } from "../data";
 import "./BasicSwitch.css";
 import HomeVisitsModal from "./HomeVisitsModal";
+import FeatherIcon from "feather-icons-react";
 
 const HomeVisits = () => {
   const [switchStates, setSwitchStates] = useState(
@@ -129,8 +130,9 @@ const HomeVisits = () => {
           <Dropdown.Toggle
             as="a"
             className="cursor-pointer text-muted arrow-none"
-          >
-            <i className="uil uil-ellipsis-v fs-14 "></i>
+          ><div className="action bg-primary">
+            <i className="uil uil-bright"></i> Action<span><FeatherIcon className='feather-icon' icon={'chevron-down'} /></span>
+            </div>
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
