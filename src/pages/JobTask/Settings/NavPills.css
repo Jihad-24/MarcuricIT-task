@@ -1,0 +1,29 @@
+.cursor-pointer {
+  color: #5369f8 !important;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.cursor-pointer.active {
+  background-color: #5369f8 !important;
+  color: white !important;
+}
+
+.title {
+  background-color: #5369f8 !important;
+  color: white !important;
+  padding: 15px;
+  font-size: large;
+  margin-top: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.title2 {
+  background-color: #5369f8 !important;
+  color: white !important;
+  padding: 12px;
+  font-size: medium;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
