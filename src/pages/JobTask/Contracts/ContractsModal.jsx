@@ -3,38 +3,27 @@ import { useState } from "react";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { FormInput } from "../../../../components";
-interface UsersModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  isEditable: boolean;
-  eventData?: any;
-  onRemoveData?: () => void;
-  onUpdateData?: (data: any) => void;
-  onAddData?: (data: any) => void;
-  data?: { role: string }[];
-}
-const UsersModal: React.FC<UsersModalProps> = ({
+import { FormInput } from "../../../components";
+
+const ContractsModal = ({
   isOpen,
   onClose,
   isEditable,
   eventData,
-  onRemoveData,
-  onUpdateData,
-  onAddData,
-  data,
+  onRemoveEvent,
+  onUpdateEvent,
+  onAddEvent,
+  EventData,
 }) => {
   const [event] = useState(eventData);
-  const [selectedRole, setSelectedRole] = useState(
-    data && data.length > 0 ? data[0].role : ""
-  );
+  console.log(EventData);
 
   // form validation schema
   const schemaResolver = yupResolver(
     yup.object().shape({
-      title: yup.string().required("Please enter user name"),
-      role: yup.string().required("Please select a role "),
-      email: yup.string().required("Please enter email address"),
+      title: yup.string().required("Please enter contractor name"),
+      company: yup.string().required("Please enter company name"),
+      discount: yup.string().required("Please enter discount Rate"),
     })
   );
 
@@ -48,11 +37,11 @@ const UsersModal: React.FC<UsersModalProps> = ({
   } = methods;
 
   // handle form submission
-  const onSubmitEvent = (data: any) => {
-    if (isEditable && onUpdateData) {
-      onUpdateData(data);
-    } else if (!isEditable && onAddData) {
-      onAddData(data);
+  const onSubmitEvent = (data) => {
+    if (isEditable && onUpdateEvent) {
+      onUpdateEvent(data);
+    } else if (!isEditable && onAddEvent) {
+      onAddEvent(data);
     }
   };
 
@@ -60,7 +49,7 @@ const UsersModal: React.FC<UsersModalProps> = ({
     <Modal show={isOpen} onHide={onClose} backdrop="static" keyboard={false}>
       <Modal.Header closeButton className="pb-2 px-4 border-bottom-0">
         <Modal.Title id="modal-title">
-          <h5> {isEditable ? "Edit Home Visits" : "Create Home Visits"} </h5>
+          <h5> {isEditable ? "Edit Contract" : "Add Contract"} </h5>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="px-4 pb-4 pt-0">
@@ -71,13 +60,14 @@ const UsersModal: React.FC<UsersModalProps> = ({
           onSubmit={handleSubmit(onSubmitEvent)}
         >
           <Row>
-            <Col lg={12}>
+            <Col sm={12}>
               <FormInput
                 type="text"
-                label="User Name"
+                label="Contractor Name"
                 name="title"
                 className="form-control"
-                placeholder="Insert User Name"
+                placeholder="Insert Contractor Name"
+                value={EventData?.name}
                 containerClass={"mb-3"}
                 register={register}
                 key="title"
@@ -87,59 +77,48 @@ const UsersModal: React.FC<UsersModalProps> = ({
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
+            <Col sm={6}>
               <FormInput
                 type="text"
-                label="Email"
-                name="email"
+                label="Company Name"
+                name="company"
                 className="form-control"
-                placeholder="Insert Email Address"
+                value={EventData?.company}
+                placeholder="Insert Company Name"
                 containerClass={"mb-3"}
                 register={register}
-                key="email"
+                key="company"
                 errors={errors}
                 control={control}
               />
             </Col>
-          </Row>
-          <Row>
-            <Col sm={12}>
+            <Col sm={6}>
               <FormInput
-                type="select"
-                label="Select Role"
-                name="role"
-                value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
+                type="text"
+                label="Discount %"
+                name="discount"
+                value={EventData?.discount}
                 className="form-control"
+                placeholder="Insert Discount %"
                 containerClass={"mb-3"}
                 register={register}
-                key="role"
+                key="discount"
                 errors={errors}
                 control={control}
-              >
-                {data?.map((item, index) => (
-                  <option key={index} value={item.role}>
-                    {item.role}
-                  </option>
-                ))}
-              </FormInput>
+              />
             </Col>
           </Row>
 
           <Row>
             <Col xs={4}>
               {isEditable ? (
-                <Button variant="danger" onClick={onRemoveData}>
+                <Button variant="danger" onClick={onRemoveEvent}>
                   Delete
                 </Button>
               ) : null}
             </Col>
             <Col xs={8} className="text-end">
-              <Button
-                className="btn btn-light me-1"
-                onClick={onClose}
-                style={{ marginRight: "10px" }}
-              >
+              <Button className="btn btn-light me-1" onClick={onClose}>
                 Close
               </Button>
               <Button
@@ -156,4 +135,4 @@ const UsersModal: React.FC<UsersModalProps> = ({
     </Modal>
   );
 };
-export default UsersModal;
+export default ContractsModal;

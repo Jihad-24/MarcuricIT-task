@@ -3,34 +3,30 @@ import { useState } from "react";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { FormInput } from "../../../components";
+import { FormInput } from "../../../../components";
 
-interface ContractsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  isEditable: boolean;
-  eventData?: any;
-  onRemoveData?: () => void;
-  onUpdateData?: (data: any) => void;
-  onAddData?: (data: any) => void;
-}
-const ContractsModal: React.FC<ContractsModalProps> = ({
+const UsersModal = ({
   isOpen,
   onClose,
   isEditable,
   eventData,
-  onRemoveData,
-  onUpdateData,
-  onAddData,
+  onRemoveEvent,
+  onUpdateEvent,
+  onAddEvent,
+  EventData,
+  AllEventData,
 }) => {
   const [event] = useState(eventData);
+  // const [selectedRole, setSelectedRole] = useState(
+  //   EventData && EventData.length > 0 ? EventData[0].role : ""
+  // );
 
   // form validation schema
   const schemaResolver = yupResolver(
     yup.object().shape({
-      title: yup.string().required("Please enter contractor name"),
-      company: yup.string().required("Please enter company name"),
-      discount: yup.string().required("Please enter discount Rate"),
+      title: yup.string().required("Please enter user name"),
+      role: yup.string().required("Please select a role "),
+      email: yup.string().required("Please enter email address"),
     })
   );
 
@@ -45,10 +41,10 @@ const ContractsModal: React.FC<ContractsModalProps> = ({
 
   // handle form submission
   const onSubmitEvent = (data: any) => {
-    if (isEditable && onUpdateData) {
-      onUpdateData(data);
-    } else if (!isEditable && onAddData) {
-      onAddData(data);
+    if (isEditable && onUpdateEvent) {
+      onUpdateEvent(data);
+    } else if (!isEditable && onAddEvent) {
+      onAddEvent(data);
     }
   };
 
@@ -56,7 +52,7 @@ const ContractsModal: React.FC<ContractsModalProps> = ({
     <Modal show={isOpen} onHide={onClose} backdrop="static" keyboard={false}>
       <Modal.Header closeButton className="pb-2 px-4 border-bottom-0">
         <Modal.Title id="modal-title">
-          <h5> {isEditable ? "Edit Contract" : "Add Contract"} </h5>
+          <h5> {isEditable ? "Edit Home Visits" : "Create Home Visits"} </h5>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="px-4 pb-4 pt-0">
@@ -67,13 +63,14 @@ const ContractsModal: React.FC<ContractsModalProps> = ({
           onSubmit={handleSubmit(onSubmitEvent)}
         >
           <Row>
-            <Col sm={12}>
+            <Col lg={12}>
               <FormInput
                 type="text"
-                label="Contractor Name"
+                label="User Name"
                 name="title"
                 className="form-control"
-                placeholder="Insert Contractor Name"
+                value={EventData?.name}
+                placeholder="Insert User Name"
                 containerClass={"mb-3"}
                 register={register}
                 key="title"
@@ -83,50 +80,56 @@ const ContractsModal: React.FC<ContractsModalProps> = ({
             </Col>
           </Row>
           <Row>
-            <Col sm={6}>
+            <Col lg={12}>
               <FormInput
                 type="text"
-                label="Company Name"
-                name="company"
+                label="Email"
+                name="email"
+                value={EventData?.email}
                 className="form-control"
-                placeholder="Insert Company Name"
+                placeholder="Insert Email Address"
                 containerClass={"mb-3"}
                 register={register}
-                key="company"
+                key="email"
                 errors={errors}
                 control={control}
               />
             </Col>
-            <Col sm={6}>
+          </Row>
+          <Row>
+            <Col sm={12}>
               <FormInput
-                type="text"
-                label="Discount %"
-                name="discount"
+                type="select"
+                label="Select Role"
+                name="role"
+                value={EventData?.role}
+                // onChange={(e) => setSelectedRole(e.target.value)}
                 className="form-control"
-                placeholder="Insert Discount %"
                 containerClass={"mb-3"}
                 register={register}
-                key="discount"
+                key="role"
                 errors={errors}
                 control={control}
-              />
+              >
+                {AllEventData?.map((item, index) => (
+                  <option key={index} value={item.role}>
+                    {item.role}
+                  </option>
+                ))}
+              </FormInput>
             </Col>
           </Row>
 
           <Row>
             <Col xs={4}>
               {isEditable ? (
-                <Button variant="danger" onClick={onRemoveData}>
+                <Button variant="danger" onClick={onRemoveEvent}>
                   Delete
                 </Button>
               ) : null}
             </Col>
             <Col xs={8} className="text-end">
-              <Button
-                className="btn btn-light me-1"
-                onClick={onClose}
-                style={{ marginRight: "10px" }}
-              >
+              <Button className="btn btn-light me-1" onClick={onClose}>
                 Close
               </Button>
               <Button
@@ -134,7 +137,7 @@ const ContractsModal: React.FC<ContractsModalProps> = ({
                 type="submit"
                 className="btn btn-success"
               >
-                 {isEditable ? "Save" : "Create"}
+                {isEditable ? "Save" : "Create"}
               </Button>
             </Col>
           </Row>
@@ -143,4 +146,4 @@ const ContractsModal: React.FC<ContractsModalProps> = ({
     </Modal>
   );
 };
-export default ContractsModal;
+export default UsersModal;

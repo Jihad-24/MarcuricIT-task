@@ -2,22 +2,39 @@ import { useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import PageTitle from "../../../../components/PageTitle";
 import Table from "../../../../components/Table";
-import { records as data } from "../../data";
-import UsersModal from "./UsersModal";
-const Users = () => {
+import DeleteModal from "../../DeleteModal";
+import { records as EventData } from "../../data";
+import RolesModal from "./RolesModal";
+const Roles = () => {
   const [showAddEditEvent, setShowAddEditEvent] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const [selectEventData, setselectEventData] = useState(null);
+
   const onCloseModal = () => setShowAddEditEvent(false);
   const onOpenModal = () => setShowAddEditEvent(true);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isEditableDelete, setIsEditableDelete] = useState(false);
+  const onCloseDeleteModal = () => setShowDeleteModal(false);
+  const onOpenDeleteModal = () => setShowDeleteModal(true);
+
+  const deleteEvent = () => {
+    setIsEditableDelete(true);
+    onOpenDeleteModal();
+  };
 
   const createNewEvent = () => {
     setIsEditable(false);
     onOpenModal();
   };
-  const EditEvent = () => {
+
+  const createNewEditEvent = (rowData) => {
     setIsEditable(true);
+    setselectEventData(rowData);
+    console.log(rowData);
     onOpenModal();
   };
+  console.log(selectEventData);
 
   // Columns configuration for the table
   const columns = [
@@ -27,17 +44,7 @@ const Users = () => {
       sort: true,
     },
     {
-      Header: "Name",
-      accessor: "name",
-      sort: true,
-    },
-    {
-      Header: "Email",
-      accessor: "email",
-      sort: true,
-    },
-    {
-      Header: "Roles",
+      Header: "Role Name",
       accessor: "role",
       sort: true,
     },
@@ -45,7 +52,7 @@ const Users = () => {
       Header: "Action",
       accessor: "",
       sort: false,
-      Cell: () => (
+      Cell: ({ row }) => (
         <Dropdown>
           <Dropdown.Toggle
             as="a"
@@ -55,10 +62,10 @@ const Users = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item onClick={EditEvent}>
+            <Dropdown.Item onClick={() => createNewEditEvent(row.original)}>
               <i className="uil uil-edit-alt me-2"></i>Edit
             </Dropdown.Item>
-            <Dropdown.Item className="text-danger">
+            <Dropdown.Item className="text-danger" onClick={deleteEvent}>
               <i className="uil uil-trash me-2"></i>Delete
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -73,29 +80,29 @@ const Users = () => {
     { text: "10", value: 10 },
     { text: "25", value: 25 },
     { text: "50", value: 50 },
-    { text: "All", value: data?.length },
+    { text: "All", value: EventData?.length },
   ];
 
   return (
     <div>
       <PageTitle
         breadCrumbItems={[
-          { label: "Users", path: "/jobtask/users" },
+          { label: "Roles", path: "/jobtask/roles" },
           {
-            label: "Users",
-            path: "/jobtask/users",
+            label: "Roles",
+            path: "/jobtask/roles",
             active: true,
           },
         ]}
-        title={"Users"}
+        title={"Roles"}
       />
       <div
         className="flex justify-between mb-6 "
         style={{ display: "flex", justifyContent: "space-between" }}
       >
         <div>
-          <h1 className="text-xl font-bold"> Users</h1>
-          <p className="mt-1 font-bold text-[#4D5154] ">JobTask / Users</p>
+          <h1 className="text-xl font-bold"> Roles</h1>
+          <p className="mt-1 font-bold text-[#4D5154] ">JobTask / Roles</p>
         </div>
         <div>
           <Button
@@ -105,27 +112,29 @@ const Users = () => {
             onClick={createNewEvent}
           >
             <i className="bi bi-plus-lg" style={{ marginRight: "8px" }}></i>
-            Create Users
+            Create Roles
           </Button>
         </div>
       </div>
 
       {showAddEditEvent && (
-        <UsersModal
+        <RolesModal
           isOpen={showAddEditEvent}
           onClose={onCloseModal}
           isEditable={isEditable}
-          data={data}
-          //   eventData={eventData}
-          //   onUpdateData={onUpdateData}
-          //   onRemoveData={onRemoveData}
-          //   onAddData={onAddData}
+          EventData={selectEventData}
         />
       )}
-
+      {showDeleteModal && (
+        <DeleteModal
+          isOpen={showDeleteModal}
+          onClose={onCloseDeleteModal}
+          isEditable={isEditableDelete}
+        />
+      )}
       <Table
         columns={columns}
-        data={data}
+        data={EventData}
         pageSize={5}
         sizePerPageList={sizePerPageList}
         isSortable={true}
@@ -136,4 +145,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Roles;

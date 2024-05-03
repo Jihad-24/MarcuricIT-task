@@ -5,23 +5,15 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { FormInput } from "../../../components";
 
-interface PatientsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  isEditable: boolean;
-  eventData?: any;
-  onRemoveData?: () => void;
-  onUpdateData?: (data: any) => void;
-  onAddData?: (data: any) => void;
-}
-const PatientsModal: React.FC<PatientsModalProps> = ({
+const HomeVisitsModal = ({
   isOpen,
   onClose,
   isEditable,
   eventData,
-  onRemoveData,
-  onUpdateData,
-  onAddData,
+  onRemoveEvent,
+  onUpdateEvent,
+  onAddEvent,
+  EventData,
 }) => {
   const [event] = useState(eventData);
 
@@ -29,9 +21,9 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
   const schemaResolver = yupResolver(
     yup.object().shape({
       title: yup.string().required("Please enter patients name"),
-      total: yup.string().required("Please enter total amount"),
+      date: yup.string().required("Please select date "),
+      address: yup.string().required("Please enter Client address"),
       paid: yup.string().required("Please enter paid amount"),
-      email: yup.string().required("Please enter email address"),
       phone: yup.string().required("Please enter phone number"),
     })
   );
@@ -47,10 +39,10 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
 
   // handle form submission
   const onSubmitEvent = (data: any) => {
-    if (isEditable && onUpdateData) {
-      onUpdateData(data);
-    } else if (!isEditable && onAddData) {
-      onAddData(data);
+    if (isEditable && onUpdateEvent) {
+      onUpdateEvent(data);
+    } else if (!isEditable && onAddEvent) {
+      onAddEvent(data);
     }
   };
 
@@ -58,7 +50,7 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
     <Modal show={isOpen} onHide={onClose} backdrop="static" keyboard={false}>
       <Modal.Header closeButton className="pb-2 px-4 border-bottom-0">
         <Modal.Title id="modal-title">
-          <h5> {isEditable ? "Edit Patients" : "Create Patients"} </h5>
+          <h5> {isEditable ? "Edit Home Visits" : "Create Home Visits"} </h5>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="px-4 pb-4 pt-0">
@@ -72,10 +64,11 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
             <Col lg={12}>
               <FormInput
                 type="text"
-                label="Patients Name"
+                label="Client Name"
                 name="title"
+                value={EventData?.name}
                 className="form-control"
-                placeholder="Insert Patients Name"
+                placeholder="Insert Client Name"
                 containerClass={"mb-3"}
                 register={register}
                 key="title"
@@ -85,25 +78,45 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
             </Col>
           </Row>
           <Row>
-            <Col lg={6}>
+            <Col lg={12}>
               <FormInput
                 type="text"
-                label="Email Address"
-                name="email"
+                label="Client Address"
+                name="address"
+                value={EventData?.address}
                 className="form-control"
-                placeholder="Insert Patients Email"
+                placeholder="Insert Client Address"
                 containerClass={"mb-3"}
                 register={register}
-                key="email"
+                key="address"
                 errors={errors}
                 control={control}
               />
             </Col>
+          </Row>
+          <Row>
             <Col lg={6}>
               <FormInput
-                type="number"
+                type="date"
+                label="Date"
+                name="date"
+                value={EventData?.date}
+                className="form-control"
+                placeholder="Insert Date Number"
+                containerClass={"mb-3"}
+                register={register}
+                key="date"
+                errors={errors}
+                control={control}
+              />
+            </Col>
+
+            <Col lg={6}>
+              <FormInput
+                type="text"
                 label="Phone"
                 name="phone"
+                value={EventData?.phone}
                 className="form-control"
                 placeholder="Insert Phone Number"
                 containerClass={"mb-3"}
@@ -114,51 +127,17 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
               />
             </Col>
           </Row>
-          <Row>
-            <Col lg={6}>
-              <FormInput
-                type="text"
-                label="Total"
-                name="total"
-                className="form-control"
-                placeholder="Insert Total Amount"
-                containerClass={"mb-3"}
-                register={register}
-                key="total"
-                errors={errors}
-                control={control}
-              />
-            </Col>
-            <Col lg={6}>
-              <FormInput
-                type="text"
-                label="Paid"
-                name="paid"
-                className="form-control"
-                placeholder="Insert Paid Amount"
-                containerClass={"mb-3"}
-                register={register}
-                key="paid"
-                errors={errors}
-                control={control}
-              />
-            </Col>
-          </Row>
 
           <Row>
             <Col xs={4}>
               {isEditable ? (
-                <Button variant="danger" onClick={onRemoveData}>
+                <Button variant="danger" onClick={onRemoveEvent}>
                   Delete
                 </Button>
               ) : null}
             </Col>
             <Col xs={8} className="text-end">
-              <Button
-                className="btn btn-light me-1"
-                onClick={onClose}
-                style={{ marginRight: "10px" }}
-              >
+              <Button className="btn btn-light me-1" onClick={onClose}>
                 Close
               </Button>
               <Button
@@ -166,7 +145,7 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
                 type="submit"
                 className="btn btn-success"
               >
-                 {isEditable ? "Save" : "Create"}
+                {isEditable ? "Save" : "Create"}
               </Button>
             </Col>
           </Row>
@@ -175,4 +154,4 @@ const PatientsModal: React.FC<PatientsModalProps> = ({
     </Modal>
   );
 };
-export default PatientsModal;
+export default HomeVisitsModal;

@@ -5,23 +5,15 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { FormInput } from "../../../../components";
 
-interface RolesModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  isEditable: boolean;
-  eventData?: any;
-  onRemoveData?: () => void;
-  onUpdateData?: (data: any) => void;
-  onAddData?: (data: any) => void;
-}
-const RolesModal: React.FC<RolesModalProps> = ({
+const RolesModal = ({
   isOpen,
   onClose,
   isEditable,
   eventData,
-  onRemoveData,
-  onUpdateData,
-  onAddData,
+  onRemoveEvent,
+  onUpdateEvent,
+  onAddEvent,
+  EventData,
 }) => {
   const [event] = useState(eventData);
 
@@ -43,10 +35,10 @@ const RolesModal: React.FC<RolesModalProps> = ({
 
   // handle form submission
   const onSubmitEvent = (data: any) => {
-    if (isEditable && onUpdateData) {
-      onUpdateData(data);
-    } else if (!isEditable && onAddData) {
-      onAddData(data);
+    if (isEditable && onUpdateEvent) {
+      onUpdateEvent(data);
+    } else if (!isEditable && onAddEvent) {
+      onAddEvent(data);
     }
   };
 
@@ -70,6 +62,7 @@ const RolesModal: React.FC<RolesModalProps> = ({
                 type="text"
                 label="Roles Name"
                 name="title"
+                value={EventData?.role}
                 className="form-control"
                 placeholder="Insert Roles Name"
                 containerClass={"mb-3"}
@@ -83,17 +76,13 @@ const RolesModal: React.FC<RolesModalProps> = ({
           <Row>
             <Col xs={4}>
               {isEditable ? (
-                <Button variant="danger" onClick={onRemoveData}>
+                <Button variant="danger" onClick={onRemoveEvent}>
                   Delete
                 </Button>
               ) : null}
             </Col>
             <Col xs={8} className="text-end">
-              <Button
-                className="btn btn-light me-1"
-                onClick={onClose}
-                style={{ marginRight: "10px" }}
-              >
+              <Button className="btn btn-light me-1" onClick={onClose}>
                 Close
               </Button>
               <Button

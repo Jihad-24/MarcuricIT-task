@@ -2,22 +2,40 @@ import { useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle";
 import Table from "../../../components/Table";
+import DeleteModal from "../DeleteModal";
+import { records as EventData } from "../data";
 import ContractsModal from "./ContractsModal";
-import { records as data } from "../data";
+
 const Contracts = () => {
   const [showAddEditEvent, setShowAddEditEvent] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const [selectEventData, setselectEventData] = useState(null);
+
   const onCloseModal = () => setShowAddEditEvent(false);
   const onOpenModal = () => setShowAddEditEvent(true);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isEditableDelete, setIsEditableDelete] = useState(false);
+  const onCloseDeleteModal = () => setShowDeleteModal(false);
+  const onOpenDeleteModal = () => setShowDeleteModal(true);
+
+  const deleteEvent = () => {
+    setIsEditableDelete(true);
+    onOpenDeleteModal();
+  };
 
   const createNewEvent = () => {
     setIsEditable(false);
     onOpenModal();
   };
-  const EditEvent = () => {
+
+  const createNewEditEvent = (rowData) => {
     setIsEditable(true);
+    setselectEventData(rowData);
+    console.log(rowData);
     onOpenModal();
   };
+  console.log(selectEventData);
 
   // Columns configuration for the table
   const columns = [
@@ -45,7 +63,7 @@ const Contracts = () => {
       Header: "Action",
       accessor: "",
       sort: false,
-      Cell: () => (
+      Cell: ({ row }) => (
         <Dropdown>
           <Dropdown.Toggle
             as="a"
@@ -55,10 +73,10 @@ const Contracts = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item onClick={EditEvent}>
+            <Dropdown.Item onClick={() => createNewEditEvent(row.original)}>
               <i className="uil uil-edit-alt me-2"></i>Edit
             </Dropdown.Item>
-            <Dropdown.Item className="text-danger">
+            <Dropdown.Item className="text-danger" onClick={deleteEvent}>
               <i className="uil uil-trash me-2"></i>Delete
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -73,7 +91,7 @@ const Contracts = () => {
     { text: "10", value: 10 },
     { text: "25", value: 25 },
     { text: "50", value: 50 },
-    { text: "All", value: data?.length },
+    { text: "All", value: EventData?.length },
   ];
 
   return (
@@ -115,16 +133,19 @@ const Contracts = () => {
           isOpen={showAddEditEvent}
           onClose={onCloseModal}
           isEditable={isEditable}
-          //   eventData={eventData}
-          //   onUpdateData={onUpdateData}
-          //   onRemoveData={onRemoveData}
-          //   onAddData={onAddData}
+          EventData={selectEventData}
         />
       )}
-
+      {showDeleteModal && (
+        <DeleteModal
+          isOpen={showDeleteModal}
+          onClose={onCloseDeleteModal}
+          isEditable={isEditableDelete}
+        />
+      )}
       <Table
         columns={columns}
-        data={data}
+        data={EventData}
         pageSize={5}
         sizePerPageList={sizePerPageList}
         isSortable={true}
